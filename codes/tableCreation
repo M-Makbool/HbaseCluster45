@@ -1,0 +1,6 @@
+create 'webtable', 
+  {NAME => 'content', VERSIONS => 3, TTL => 7776000},  # 90 days = 7,776,000 seconds
+  {NAME => 'metadata', VERSIONS => 1}, 
+  {NAME => 'outlinks', VERSIONS => 2, TTL => 15552000},  # 180 days
+  {NAME => 'inlinks', VERSIONS => 2, TTL => 15552000}
+  

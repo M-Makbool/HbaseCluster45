@@ -1,6 +1,7 @@
 FROM ubuntu:22.04 AS hadoop_zoo
 
-RUN apt update && apt install -y cron openjdk-8-jdk ssh sudo
+RUN apt update && apt install -y cron openjdk-8-jdk python3 pip python3-venv ssh sudo
+RUN pip install dotenv faker fastparquet happybase logger pandas pyarrow
 RUN apt autoclean && apt autoremove
 RUN addgroup hadoop
 RUN adduser --disabled-password --ingroup hadoop hadoop
