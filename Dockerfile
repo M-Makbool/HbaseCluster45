@@ -49,5 +49,5 @@ RUN sudo tar -xzf /usr/local/hbase-2.5.11-bin.tar.gz -C /usr/local && \
     sudo chown -R hadoop:hadoop $HBASE_HOME && \
     sudo rm /usr/local/hbase-2.5.11-bin.tar.gz
 
-COPY --chown=hadoop:hadoop --chmod=777 hbase-script.sh .
-ENTRYPOINT [ "./hbase-script.sh" ]
+# COPY --chown=hadoop:hadoop --chmod=777 hbase-script.sh .
+# ENTRYPOINT [ "./hbase-script.sh" ]

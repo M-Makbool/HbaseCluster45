@@ -29,6 +29,7 @@ then
         touch ~/.makCluster;
     fi
         hdfs --daemon start namenode;
+        start-hbase.sh
 else
     if
         [ ! -f ~/.makCluster ];
@@ -37,6 +38,7 @@ else
     touch ~/.makCluster;
     fi
     start-all.sh;
+    hbase-daemon.sh start regionserver
 fi
 
 sleep infinity
