@@ -30,6 +30,7 @@ then
     fi
         hdfs --daemon start namenode;
         start-hbase.sh
+        hbase-daemon.sh start thrift
 else
     if
         [ ! -f ~/.makCluster ];
