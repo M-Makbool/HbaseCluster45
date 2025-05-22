@@ -37,3 +37,17 @@ RUN sudo mkdir /home/shared && \
 COPY --chown=hadoop:hadoop --chmod=777 start-script.sh .
 VOLUME [ "$HADOOP_HOME/etc/hadoop/" ]
 ENTRYPOINT [ "./start-script.sh" ]
+
+
+FROM hadoop_zoo AS hbase
+
+ENV HBASE_HOME=/usr/local/hbase PATH=$PATH:/usr/local/hbase/bin
+
+ADD --chown=hadoop:hadoop https://dlcdn.apache.org/hbase/2.5.11/hbase-2.5.11-bin.tar.gz /usr/local
+RUN sudo tar -xzf /usr/local/hbase-2.5.11-bin.tar.gz -C /usr/local && \
+    sudo mv /usr/local/hbase-2.5.11 $HBASE_HOME && \
+    sudo chown -R hadoop:hadoop $HBASE_HOME && \
+    sudo rm /usr/local/hbase-2.5.11-bin.tar.gz
+
+COPY --chown=hadoop:hadoop --chmod=777 hbase-script.sh .
+ENTRYPOINT [ "./hbase-script.sh" ]
