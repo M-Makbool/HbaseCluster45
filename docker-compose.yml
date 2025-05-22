@@ -1,0 +1,125 @@
+services:
+  hadoop-master1:
+    build:
+      context: .
+      target: hadoop
+    image: makbool/hadoop:compose
+    container_name: hadoop-master1
+    hostname: master1
+    ports:
+      - "9871:9870" # HDFS UI
+      - "8188:8088" # ResourceManager UI
+    networks:
+      - hadoop-network
+    volumes:
+      - ./hadoopConf/core-site.xml:/usr/local/hadoop/etc/hadoop/core-site.xml
+      - ./hadoopConf/hdfs-site.xml:/usr/local/hadoop/etc/hadoop/hdfs-site.xml
+      - ./hadoopConf/mapred-site.xml:/usr/local/hadoop/etc/hadoop/mapred-site.xml
+      - ./hadoopConf/yarn-site.xml:/usr/local/hadoop/etc/hadoop/yarn-site.xml
+      - ./hadoopConf/hadoop-env.sh:/usr/local/hadoop/etc/hadoop/hadoop-env.sh
+      - ./hadoopConf/workers:/usr/local/hadoop/etc/hadoop/workers
+    healthcheck:
+      test: [ "CMD", "hdfs", "haadmin", "-checkHealth", "nn1" ]
+      interval: 7s
+      timeout: 3s
+      retries: 7
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 3g
+          cpus: "1.5"
+
+  hadoop-master2:
+    image: makbool/hadoop:compose
+    container_name: hadoop-master2
+    hostname: master2
+    ports:
+      - "9872:9870" # HDFS Web UI
+      - "8288:8088" # YARN ResourceManager Web UI
+    networks:
+      - hadoop-network
+    volumes:
+      - ./hadoopConf/core-site.xml:/usr/local/hadoop/etc/hadoop/core-site.xml
+      - ./hadoopConf/hdfs-site.xml:/usr/local/hadoop/etc/hadoop/hdfs-site.xml
+      - ./hadoopConf/mapred-site.xml:/usr/local/hadoop/etc/hadoop/mapred-site.xml
+      - ./hadoopConf/yarn-site.xml:/usr/local/hadoop/etc/hadoop/yarn-site.xml
+      - ./hadoopConf/hadoop-env.sh:/usr/local/hadoop/etc/hadoop/hadoop-env.sh
+      - ./hadoopConf/workers:/usr/local/hadoop/etc/hadoop/workers
+    healthcheck:
+      test: [ "CMD", "hdfs", "haadmin", "-checkHealth", "nn2" ]
+      interval: 7s
+      timeout: 3s
+      retries: 7
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 3g
+          cpus: "1.5"
+
+  hadoop-master3:
+    image: makbool/hadoop:compose
+    container_name: hadoop-master3
+    hostname: master3
+    ports:
+      - "9873:9870" # HDFS Web UI
+      - "8388:8088" # YARN ResourceManager Web UI
+    networks:
+      - hadoop-network
+    volumes:
+      - ./hadoopConf/core-site.xml:/usr/local/hadoop/etc/hadoop/core-site.xml
+      - ./hadoopConf/hdfs-site.xml:/usr/local/hadoop/etc/hadoop/hdfs-site.xml
+      - ./hadoopConf/mapred-site.xml:/usr/local/hadoop/etc/hadoop/mapred-site.xml
+      - ./hadoopConf/yarn-site.xml:/usr/local/hadoop/etc/hadoop/yarn-site.xml
+      - ./hadoopConf/hadoop-env.sh:/usr/local/hadoop/etc/hadoop/hadoop-env.sh
+      - ./hadoopConf/workers:/usr/local/hadoop/etc/hadoop/workers
+    healthcheck:
+      test: [ "CMD", "hdfs", "haadmin", "-checkHealth", "nn3" ]
+      interval: 7s
+      timeout: 3s
+      retries: 7
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 3g
+          cpus: "1.5"
+
+  hadoop-worker:
+    image: makbool/hadoop:compose
+    networks:
+      - hadoop-network
+    volumes:
+      - ./hadoopConf/core-site.xml:/usr/local/hadoop/etc/hadoop/core-site.xml
+      - ./hadoopConf/hdfs-site.xml:/usr/local/hadoop/etc/hadoop/hdfs-site.xml
+      - ./hadoopConf/mapred-site.xml:/usr/local/hadoop/etc/hadoop/mapred-site.xml
+      - ./hadoopConf/yarn-site.xml:/usr/local/hadoop/etc/hadoop/yarn-site.xml
+      - ./hadoopConf/hadoop-env.sh:/usr/local/hadoop/etc/hadoop/hadoop-env.sh
+      - ./hadoopConf/workers:/usr/local/hadoop/etc/hadoop/workers
+    healthcheck:
+      test: ["CMD-SHELL", "jps | grep -q DataNode "]
+      interval: 10s
+      timeout: 5s
+      retries: 7
+      start_period: 10s
+    depends_on:
+      hadoop-master1:
+        condition: service_healthy
+      hadoop-master2:
+        condition: service_healthy
+      hadoop-master3:
+        condition: service_healthy
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 4g
+          cpus: "4"
+
+networks:
+  hadoop-network:
+    driver: bridge
+volumes:
+  namenodes:
+  datanodes:  
