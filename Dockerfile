@@ -1,18 +1,24 @@
-FROM ubuntu:22.04 AS hadoop
+FROM ubuntu:22.04 AS hadoop_zoo
 
 RUN apt update && apt install -y cron openjdk-8-jdk ssh sudo
 RUN apt autoclean && apt autoremove
 RUN addgroup hadoop
 RUN adduser --disabled-password --ingroup hadoop hadoop
 
-ENV HADOOP_HOME=/usr/local/hadoop
-ENV PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+ENV HADOOP_HOME=/usr/local/hadoop ZOOKEEPER_HOME=/usr/local/zookeeper
+ENV PATH=$PATH:$ZOOKEEPER_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
 
 ADD https://dlcdn.apache.org/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz /tmp
 RUN tar -xzf /tmp/hadoop-3.3.6.tar.gz -C /usr/local && \
     rm /tmp/hadoop-3.3.6.tar.gz && \
     mv /usr/local/hadoop-3.3.6 $HADOOP_HOME && \
     chown -R hadoop:hadoop $HADOOP_HOME
+
+ADD https://dlcdn.apache.org/zookeeper/zookeeper-3.8.4/apache-zookeeper-3.8.4-bin.tar.gz /tmp
+RUN tar -xzf /tmp/apache-zookeeper-3.8.4-bin.tar.gz -C /usr/local && \
+    rm /tmp/apache-zookeeper-3.8.4-bin.tar.gz && \
+    mv /usr/local/apache-zookeeper-3.8.4-bin $ZOOKEEPER_HOME && \
+    chown -R hadoop:hadoop $ZOOKEEPER_HOME
 
 RUN echo "root:123" | chpasswd && \
     echo 'hadoop ALL=(ALL:ALL) NOPASSWD:ALL' >> /etc/sudoers

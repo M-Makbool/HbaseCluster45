@@ -2,7 +2,7 @@ services:
   hadoop-master1:
     build:
       context: .
-      target: hadoop
+      target: hadoop-zoo
     image: makbool/hadoop:compose
     container_name: hadoop-master1
     hostname: master1
@@ -18,6 +18,9 @@ services:
       - ./hadoopConf/yarn-site.xml:/usr/local/hadoop/etc/hadoop/yarn-site.xml
       - ./hadoopConf/hadoop-env.sh:/usr/local/hadoop/etc/hadoop/hadoop-env.sh
       - ./hadoopConf/workers:/usr/local/hadoop/etc/hadoop/workers
+      - ./zookeeperConf/zoo.cfg:/usr/local/zookeeper/conf/zoo.cfg
+      - namenodes:/home/shared
+      - ./codes:/home/hadoop/codes
     healthcheck:
       test: [ "CMD", "hdfs", "haadmin", "-checkHealth", "nn1" ]
       interval: 7s
@@ -46,6 +49,9 @@ services:
       - ./hadoopConf/yarn-site.xml:/usr/local/hadoop/etc/hadoop/yarn-site.xml
       - ./hadoopConf/hadoop-env.sh:/usr/local/hadoop/etc/hadoop/hadoop-env.sh
       - ./hadoopConf/workers:/usr/local/hadoop/etc/hadoop/workers
+      - ./zookeeperConf/zoo.cfg:/usr/local/zookeeper/conf/zoo.cfg
+      - namenodes:/home/shared
+      - ./codes:/home/hadoop/codes
     healthcheck:
       test: [ "CMD", "hdfs", "haadmin", "-checkHealth", "nn2" ]
       interval: 7s
@@ -74,6 +80,9 @@ services:
       - ./hadoopConf/yarn-site.xml:/usr/local/hadoop/etc/hadoop/yarn-site.xml
       - ./hadoopConf/hadoop-env.sh:/usr/local/hadoop/etc/hadoop/hadoop-env.sh
       - ./hadoopConf/workers:/usr/local/hadoop/etc/hadoop/workers
+      - ./zookeeperConf/zoo.cfg:/usr/local/zookeeper/conf/zoo.cfg
+      - namenodes:/home/shared
+      - ./codes:/home/hadoop/codes
     healthcheck:
       test: [ "CMD", "hdfs", "haadmin", "-checkHealth", "nn3" ]
       interval: 7s
@@ -97,6 +106,9 @@ services:
       - ./hadoopConf/yarn-site.xml:/usr/local/hadoop/etc/hadoop/yarn-site.xml
       - ./hadoopConf/hadoop-env.sh:/usr/local/hadoop/etc/hadoop/hadoop-env.sh
       - ./hadoopConf/workers:/usr/local/hadoop/etc/hadoop/workers
+      - ./zookeeperConf/zoo.cfg:/usr/local/zookeeper/conf/zoo.cfg
+      - datanodes:/home/shared
+      - ./codes:/home/hadoop/codes
     healthcheck:
       test: ["CMD-SHELL", "jps | grep -q DataNode "]
       interval: 10s
